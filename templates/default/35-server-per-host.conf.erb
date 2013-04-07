@@ -21,6 +21,27 @@ $template PerHostNewsErr,"<%= @log_dir %>/<%= @per_host_dir %>/news.err"
 $template PerHostNewsNotice,"<%= @log_dir %>/<%= @per_host_dir %>/news.notice"
 $template PerHostDebug,"<%= @log_dir %>/<%= @per_host_dir %>/debug"
 $template PerHostMessages,"<%= @log_dir %>/<%= @per_host_dir %>/messages"
+$template PerHostNovaMessages,"<%= @log_dir %>/<%= @per_host_dir %>/nova.log"
+$template PerHostCinderMessages,"<%= @log_dir %>/<%= @per_host_dir %>/cinder.log"
+$template PerHostKeystoneMessages,"<%= @log_dir %>/<%= @per_host_dir %>/keystone.log"
+$template PerHostQuantumMessages,"<%= @log_dir %>/<%= @per_host_dir %>/quantum.log"
+$template PerHostGlanceMessages,"<%= @log_dir %>/<%= @per_host_dir %>/glance.log"
+
+#nova logs into local1
+local1.* ?PerHostNovaMessages
+& ~
+#cinder logs into local2 
+local2.* ?PerHostCinderMessages
+& ~
+#quantum logs into local3
+local3.* ?PerHostQuantumMessages
+& ~
+#keystone logs into local4
+local4.* ?PerHostKeystoneMessages
+& ~
+#glance logs into local5
+local5.* ?PerHostGlanceMessages
+& ~
 
 auth,authpriv.*         ?PerHostAuth
 *.*;auth,authpriv.none  -?PerHostSyslog
