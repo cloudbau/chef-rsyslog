@@ -4,3 +4,4 @@
 <% when "udp" -%>
 *.* @<%= @server %>:<%= node['rsyslog']['port'] %>
 <% end -%>
+*.* @<%=@logstash%>:5544

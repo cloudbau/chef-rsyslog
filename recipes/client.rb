@@ -18,11 +18,15 @@
 #
 
 include_recipe "rsyslog"
-
+logstash_server = nil
 rsyslog_server = get_rsyslog_server_ip
-
 if rsyslog_server.nil?
   Chef::Application.fatal!("The rsyslog::client recipe was unable to determine the remote syslog server. Checked both the server_ip attribute and search()")
+end
+
+logstash_server = get_logstash_server_ip
+if logstash_server.nil? || logstash_server.empty?
+  Chef::Application.fatal!("No Logstash Server found!")
 end
 
 template "/etc/rsyslog.d/49-remote.conf" do
@@ -31,7 +35,8 @@ template "/etc/rsyslog.d/49-remote.conf" do
   backup false
   variables(
   :server => rsyslog_server,
-  :protocol => node['rsyslog']['protocol']
+  :protocol => node['rsyslog']['protocol'],
+  :logstash => logstash_server
   )
   mode 0644
   notifies :restart, "service[#{node['rsyslog']['service_name']}]"
